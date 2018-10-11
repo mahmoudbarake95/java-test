@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import com.h2rd.refactoring.constants.ErrorMessages;
+import com.h2rd.refactoring.constants.SuccessMessages;
 import com.h2rd.refactoring.model.User;
 import com.h2rd.refactoring.repository.UserRepository;
 import com.h2rd.refactoring.service.UserServiceImpl;
@@ -32,52 +34,57 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    @GetMapping("/users/{id}")
-    public User getUser(@PathVariable long id) {
+    @GetMapping("/users/{email}")
+    public ResponseEntity<Object> getUser(@PathVariable String email) {
 //        Optional<User> user = userRepository.findById(id);
-        Optional<User> user = userService.getUser(id);
+        Optional<User> user = userService.getUser(email);
 
-        if (!user.isPresent())
-            try {
-                throw new Exception("id-" + id);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        return user.get();
+        if (!user.isPresent()){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(user.get());
+//        return user.get();
     }
 
     @PostMapping("/users")
     public ResponseEntity<Object> createUser(@RequestBody User user) {
 //        User saveduser = userRepository.save(user);
+        if(userService.getUser(user.getEmail()).isPresent()){
+            return ResponseEntity.badRequest().body(ErrorMessages.USER_ALREADY_EXISTS);
+        }
         User saveduser = userService.createUser(user);
 
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(saveduser.getId()).toUri();
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{email}")
+                .buildAndExpand(saveduser.getEmail()).toUri();
 
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location).body(SuccessMessages.USER_CREATED_SUCCESSFULLY);
     }
 
-    @PutMapping("/users/{id}")
-    public ResponseEntity<Object> updateUser(@RequestBody User user, @PathVariable long id) {
+    @PutMapping("/users/{email}")
+    public ResponseEntity<Object> updateUser(@RequestBody User userFromRequestBody, @PathVariable String email) {
 
 //        Optional<User> userOptional = userRepository.findById(id);
-        Optional<User> userOptional = userService.getUser(id);
+        Optional<User> userToUpdate = userService.getUser(email);
 
-        if (!userOptional.isPresent())
+        if (!userToUpdate.isPresent())
             return ResponseEntity.notFound().build();
         
-        userService.updateUser(user, id);
+        if(!userFromRequestBody.getEmail().equals(email)){
+            return ResponseEntity.badRequest().body(ErrorMessages.CANNOT_CHANGE_EMAIL_OF_USER);
+        }
+        
+        userService.updateUser(userToUpdate.get(), userFromRequestBody);
 //        user.setId(id);
 //
 //        userRepository.save(user);
 
-        return ResponseEntity.noContent().build();
+//        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(SuccessMessages.USER_UPDATED_SUCCESSFULLY);
     }
     
-    @DeleteMapping("/users/{id}")
-    public void deleteUser(@PathVariable long id) {
-        userService.deleteUser(id);
+    @DeleteMapping("/users/{email}")
+    public void deleteUser(@PathVariable String email) {
+        userService.deleteUser(email);
 //        userRepository.deleteById(id);
     }
     

@@ -18,8 +18,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> getUser(long id) {
-        return userRepository.findById(id);
+    public Optional<User> getUser(String email) {
+        return userRepository.findById(email);
     }
 
     @Override
@@ -28,15 +28,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(User user, long id) {
-        user.setId(id);
-        user = userRepository.save(user);
-        return user;
+    public User updateUser(User userToUpdate, User userFromRequestBody) {
+//        user.setId(id);
+//        userToUpdate.setEmail(userFromRequestBody.getEmail());
+        userToUpdate.setName(userFromRequestBody.getName());
+        userToUpdate = userRepository.save(userToUpdate);
+        return userToUpdate;
     }
 
     @Override
-    public void deleteUser(long id) {
-        userRepository.deleteById(id);
+    public void deleteUser(String email) {
+        userRepository.deleteById(email);
     }
     
 }
