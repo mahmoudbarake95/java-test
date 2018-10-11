@@ -1,4 +1,4 @@
-package com.h2rd.refactoring.resource;
+package com.h2rd.refactoring.controller;
 
 import java.net.URI;
 import java.util.List;
@@ -18,7 +18,7 @@ import com.h2rd.refactoring.service.UserServiceImpl;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
-public class UserResource {
+public class UserController {
 
 //    @Autowired
 //    private UserRepository userRepository;

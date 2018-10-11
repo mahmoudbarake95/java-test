@@ -19,18 +19,18 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import com.h2rd.refactoring.controller.UserController;
 import com.h2rd.refactoring.model.User;
-import com.h2rd.refactoring.resource.UserResource;
 import com.h2rd.refactoring.service.UserServiceImpl;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(UserResource.class)
-public class UserResourceTest {
+@WebMvcTest(UserController.class)
+public class UserControllerTest {
     @Autowired
     private MockMvc mvc;
     
     @MockBean
-    private UserServiceImpl userService;
+    private UserServiceImpl userService;    //mock the user service to test the resource in isolation
     
     @Test
     public void givenUsers_whenGetUsers_thenReturnJsonArray()
