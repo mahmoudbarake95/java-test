@@ -1,4 +1,4 @@
-package com.h2rd.refactoring.application.model;
+package com.h2rd.refactoring.model;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

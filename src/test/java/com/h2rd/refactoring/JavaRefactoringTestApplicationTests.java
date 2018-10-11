@@ -1,4 +1,4 @@
-package com.h2rd.javarefactoringtest;
+package com.h2rd.refactoring;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

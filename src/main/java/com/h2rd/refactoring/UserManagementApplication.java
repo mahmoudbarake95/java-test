@@ -1,4 +1,4 @@
-package com.h2rd.refactoring.application;
+package com.h2rd.refactoring;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
