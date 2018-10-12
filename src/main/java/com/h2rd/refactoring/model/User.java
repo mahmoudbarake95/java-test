@@ -9,6 +9,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import com.h2rd.refactoring.listener.UserListener;
 
 //add @data annotation
@@ -27,7 +28,7 @@ public class User {
     @NotBlank
     String name;
     
-//    @NotEmpty.List(@NotEmpty Role) 
+    @NotEmpty
     ArrayList<Role> roles;
 
     //    public User() {

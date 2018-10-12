@@ -11,7 +11,7 @@ public interface UserService {
     public List<User> getAllUsers();
     public Optional<User> getUser(String email);
     public User createUser(User user);
-    public User updateUser(User userToUpdate, User userFromRequestBody);
+    public User updateUser(User newUser, String email);
     public void deleteUser(String email);
     
 }

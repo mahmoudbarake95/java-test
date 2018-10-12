@@ -11,4 +11,6 @@ public final class ErrorMessages {
     public static final String USER_NAME_EMPTY = "The user's name cannot be empty";
     public static final String USER_HAS_NO_ROLES = "The user must have at least 1 role";
     
+    public static final String REQUEST_BODY_MALFORMED = "The request body is malformed";
+    
 }

@@ -3,6 +3,7 @@ package com.h2rd.refactoring.model;
 import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 public class Role implements Serializable{
@@ -18,6 +19,11 @@ public class Role implements Serializable{
     }
     
     @Id
+    @NotBlank
     private String name;
+
+    public String getName() {
+        return name;
+    }
 
 }

@@ -1,57 +1,55 @@
 package com.h2rd.refactoring.listener;
 
+import java.util.List;
+import java.util.Set;
 import javax.persistence.PostLoad;
-import javax.persistence.PostPersist;
-import javax.persistence.PostRemove;
-import javax.persistence.PostUpdate;
 import javax.persistence.PrePersist;
-import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+import org.springframework.stereotype.Component;
+import com.h2rd.refactoring.constants.ErrorMessages;
+import com.h2rd.refactoring.exception.BadRequestException;
+import com.h2rd.refactoring.model.Role;
 import com.h2rd.refactoring.model.User;
-import com.h2rd.refactoring.repository.UserRepository;
 
+@Component
 public class UserListener {
-    
-//    ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-//    Validator validator = factory.getValidator();
-    
-    @Autowired
-    private UserRepository userRepository;
-    
+
+    ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+    Validator validator = factory.getValidator();
+
     @PrePersist
-    public void userPrePersist(User ob) {
-        System.out.println("Listening User Pre Persist : " + ob.getName());
-        
+    @PreUpdate
+    public void onPreUpdate(User user) {
+        System.out.println("Listening User Pre Persist/Update : " + user.getName());
+        if(hasViolatedConstraints(user)){
+            throw new BadRequestException(ErrorMessages.REQUEST_BODY_MALFORMED);
+        }
     }
-    
-    @PostPersist
-    public void userPostPersist(User ob) {
-        System.out.println("Listening User Post Persist : " + ob.getName());
-    }
-    
+
     @PostLoad
     public void userPostLoad(User ob) {
         System.out.println("Listening User Post Load : " + ob.getName());
     }   
-    
-    @PreUpdate
-    public void userPreUpdate(User ob) {
-        System.out.println("Listening User Pre Update : " + ob.getName());
+
+    public boolean hasEmptyRoleName(User user){
+        List<Role> userRoles = user.getRoles();
+        for (int i=0; i < userRoles.size(); i++) {
+            if(userRoles.get(i).getName().trim().equals("")){
+                return true;
+            }
+        }
+        return false;
     }
-    
-    @PostUpdate
-    public void userPostUpdate(User ob) {
-        System.out.println("Listening User Post Update : " + ob.getName());
-    }
-    
-    @PreRemove
-    public void userPreRemove(User ob) {
-        System.out.println("Listening User Pre Remove : " + ob.getName());
-    }
-    
-    @PostRemove
-    public void userPostRemove(User ob) {
-        System.out.println("Listening User Post Remove : " + ob.getName());
+
+    public boolean hasViolatedConstraints(User user){
+        Set<ConstraintViolation<User>> userConstraintViolations = validator.validate(user);
+        if(userConstraintViolations.size() > 0 || hasEmptyRoleName(user)){    //1 or more constraints were violated
+            return true;
+        }
+        return false;
     }
 }
