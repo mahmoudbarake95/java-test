@@ -14,21 +14,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.h2rd.refactoring.constants.ErrorMessages;
 import com.h2rd.refactoring.constants.SuccessMessages;
+import com.h2rd.refactoring.exception.ResourceNotFoundException;
 import com.h2rd.refactoring.model.User;
 import com.h2rd.refactoring.repository.UserRepository;
 import com.h2rd.refactoring.service.UserServiceImpl;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+//Spring boot is multi-threaded and therefore handles multiple requests concurrently
 @RestController
 public class UserController {
-
+    
 //    @Autowired
 //    private UserRepository userRepository;
     
     @Autowired
     private UserServiceImpl userService;
 
-    @GetMapping("/users")
+//    @GetMapping("/users")
+    @GetMapping(path = "/users")
     public List<User> getAllUsers() {
 //        return userRepository.findAll();
         return userService.getAllUsers();
@@ -40,13 +43,14 @@ public class UserController {
         Optional<User> user = userService.getUser(email);
 
         if (!user.isPresent()){
-            return ResponseEntity.notFound().build();
+//            return ResponseEntity.notFound().build();
+            throw new ResourceNotFoundException("This user cannot be found");
         }
         return ResponseEntity.ok(user.get());
 //        return user.get();
     }
 
-    @PostMapping("/users")
+    @PostMapping(path = "/users", consumes="application/json")
     public ResponseEntity<Object> createUser(@RequestBody User user) {
 //        User saveduser = userRepository.save(user);
         if(userService.getUser(user.getEmail()).isPresent()){
@@ -60,7 +64,7 @@ public class UserController {
         return ResponseEntity.created(location).body(SuccessMessages.USER_CREATED_SUCCESSFULLY);
     }
 
-    @PutMapping("/users/{email}")
+    @PutMapping(path = "/users/{email}", consumes="application/json")
     public ResponseEntity<Object> updateUser(@RequestBody User userFromRequestBody, @PathVariable String email) {
 
 //        Optional<User> userOptional = userRepository.findById(id);
