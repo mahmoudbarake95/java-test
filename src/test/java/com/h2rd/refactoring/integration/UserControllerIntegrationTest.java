@@ -49,7 +49,7 @@ public class UserControllerIntegrationTest {
 
     @Test
     public void givenUsers_whenGetUsers_thenStatus200() throws Exception {
-        User user1 = createUser("john","john@gmail.com","Student");
+        User user1 = createUser("john","john@gmail.com","student");
         userRepository.saveAndFlush(user1);
 
         //get a particular user
@@ -103,7 +103,7 @@ public class UserControllerIntegrationTest {
 
     @Test
     public void whenValidInput_thenUpdateUser() throws IOException, Exception {
-        User user1 = createUser("john","john@gmail.com","Student");
+        User user1 = createUser("john","john@gmail.com","student");
         userRepository.saveAndFlush(user1);
 
         //update name and role
@@ -115,7 +115,7 @@ public class UserControllerIntegrationTest {
 
     @Test
     public void whenInValidInput_thenDoNotUpdateUser() throws IOException, Exception {
-        User user1 = createUser("john","john@gmail.com","Student");
+        User user1 = createUser("john","john@gmail.com","student");
         userRepository.saveAndFlush(user1);
 
         //cannot update email
@@ -140,8 +140,8 @@ public class UserControllerIntegrationTest {
     }
 
     @Test
-    public void whenValidInput_thenDeleteUser() throws IOException, Exception {
-        User user1 = createUser("john","john@gmail.com","Student");
+    public void whenValidIdentifier_thenDeleteUser() throws IOException, Exception {
+        User user1 = createUser("john","john@gmail.com","student");
         userRepository.saveAndFlush(user1);
 
         mvc.perform(get("/users/john@gmail.com").contentType(MediaType.APPLICATION_JSON))
@@ -154,8 +154,8 @@ public class UserControllerIntegrationTest {
     }
 
     @Test
-    public void whenInValidInput_thenDoNotDeleteUser() throws IOException, Exception {
-        User user1 = createUser("john","john@gmail.com","Student");
+    public void whenInValidIdentifier_thenDoNotDeleteUser() throws IOException, Exception {
+        User user1 = createUser("john","john@gmail.com","student");
         userRepository.saveAndFlush(user1);
 
         //invalid email
