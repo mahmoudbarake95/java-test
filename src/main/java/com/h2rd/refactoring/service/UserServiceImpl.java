@@ -17,18 +17,18 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
     
-    @Override
+//    @Override
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
-    @Override
+//    @Override
     public Optional<User> getUser(String email) {
         validateUserExistence(email);
         return userRepository.findById(email);
     }
 
-    @Override
+//    @Override
     public User createUser(User user) {
         if(userRepository.existsById(user.getEmail())){
             throw new BadRequestException(ErrorMessages.USER_ALREADY_EXISTS);
@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
-    @Override
+//    @Override
     public User updateUser(User newUser, String email) {
         validateUserExistence(email);
         if(!newUser.getEmail().equals(email)){  //cannot check this condition in entityListener because @PreUpdate method takes only 1 argument 
@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(newUser);
     }
 
-    @Override
+//    @Override
     public void deleteUser(String email) {
         validateUserExistence(email);
         userRepository.deleteById(email);

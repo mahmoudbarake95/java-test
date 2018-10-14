@@ -30,10 +30,12 @@ import com.h2rd.refactoring.controller.UserController;
 import com.h2rd.refactoring.model.Role;
 import com.h2rd.refactoring.model.User;
 import com.h2rd.refactoring.service.UserServiceImpl;
+import com.h2rd.refactoring.util.TestUtil;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(UserController.class)
 public class UserControllerUnitTest {
+    
     @Autowired
     private MockMvc mvc;
     
@@ -47,7 +49,7 @@ public class UserControllerUnitTest {
     
     @Test
     public void givenUsers_whenGetUsers_thenReturnJsonArray() throws Exception {
-        User user1 = createUser("john","john@gmail.com","student"); 
+        User user1 = TestUtil.createUser("john","john@gmail.com","student"); 
         List<User> allUsers = Arrays.asList(user1);
      
         //get all users
@@ -73,8 +75,8 @@ public class UserControllerUnitTest {
     }
     
     @Test
-    public void whenValidInput_thenCreateUser() throws Exception {
-        User user1 = createUser("mahmoud","mahmoudbarake95@gmail.com","student");
+    public void whenValidInput_thencreateUser() throws Exception {
+        User user1 = TestUtil.createUser("mahmoud","mahmoudbarake95@gmail.com","student");
         given(userService.createUser(Mockito.anyObject())).willReturn(user1);
         
         String jsonContent = "{\"name\": \"Mahmoud\",\"email\": \"mahmoudbarake95@gmail.com\",\"roles\": [\"student\"]}";
@@ -84,11 +86,11 @@ public class UserControllerUnitTest {
     
     @Test
     public void whenValidInput_thenUpdateUser() throws Exception {
-        User user1 = createUser("mahmoud","mahmoudbarake95@gmail.com","student");
+        User user1 = TestUtil.createUser("mahmoud","mahmoudbarake95@gmail.com","student");
         given(userService.createUser(Mockito.anyObject())).willReturn(user1);
         userService.createUser(user1);
         
-        User user2 = createUser("mahmoud barake","mahmoudbarake95@gmail.com","student");//simulate the new user after the update
+        User user2 = TestUtil.createUser("mahmoud barake","mahmoudbarake95@gmail.com","student");//simulate the new user after the update
         given(userService.updateUser(Mockito.anyObject(),Mockito.anyString())).willReturn(user2);
         
         //update name
@@ -99,10 +101,6 @@ public class UserControllerUnitTest {
     }
     
     //Delete test skipped
-    
-    private User createUser(String name, String email, String roleName){
-        return new User(name,email, new ArrayList<Role>(
-                Arrays.asList(new Role(roleName))));
-    }
+    //testing invalid inputs was skipped
 
 }
