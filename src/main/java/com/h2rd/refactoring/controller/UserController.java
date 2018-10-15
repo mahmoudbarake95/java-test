@@ -12,18 +12,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import com.h2rd.refactoring.constants.ErrorMessages;
-import com.h2rd.refactoring.constants.SuccessMessages;
-import com.h2rd.refactoring.exception.ResourceNotFoundException;
-import com.h2rd.refactoring.model.User;
-import com.h2rd.refactoring.repository.UserRepository;
-import com.h2rd.refactoring.service.UserServiceImpl;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import com.h2rd.refactoring.constants.SuccessMessages;
+import com.h2rd.refactoring.model.User;
+import com.h2rd.refactoring.service.UserServiceImpl;
 
 //Spring boot is multi-threaded and therefore handles multiple requests concurrently
 @RestController
 public class UserController {
-
     @Autowired
     private UserServiceImpl userService;
 
@@ -51,14 +47,13 @@ public class UserController {
     @PutMapping(path = "/users/{email}", consumes="application/json")
     public ResponseEntity<String> updateUser(@RequestBody User newUser, @PathVariable String email) {
         userService.updateUser(newUser, email);
-
         return ResponseEntity.ok(SuccessMessages.USER_UPDATED_SUCCESSFULLY);
     }
 
     @DeleteMapping("/users/{email}")
     public ResponseEntity<String> deleteUser(@PathVariable String email) {
         userService.deleteUser(email);
-        return ResponseEntity.ok(SuccessMessages.USER_UPDATED_SUCCESSFULLY);
+        return ResponseEntity.ok(SuccessMessages.USER_DELTED_SUCCESSFULLY);
     }
 
 }

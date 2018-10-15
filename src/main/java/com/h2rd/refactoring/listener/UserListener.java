@@ -2,7 +2,6 @@ package com.h2rd.refactoring.listener;
 
 import java.util.List;
 import java.util.Set;
-import javax.persistence.PostLoad;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.validation.ConstraintViolation;
@@ -17,23 +16,16 @@ import com.h2rd.refactoring.model.User;
 
 @Component
 public class UserListener {
-
     ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
     Validator validator = factory.getValidator();
 
     @PrePersist
     @PreUpdate
     public void onPreUpdate(User user) {
-        System.out.println("Listening User Pre Persist/Update : " + user.getName());
         if(hasViolatedConstraints(user)){
             throw new BadRequestException(ErrorMessages.REQUEST_BODY_MALFORMED);
         }
     }
-
-    @PostLoad
-    public void userPostLoad(User ob) {
-        System.out.println("Listening User Post Load : " + ob.getName());
-    }   
 
     public boolean hasEmptyRoleName(User user){
         List<Role> userRoles = user.getRoles();

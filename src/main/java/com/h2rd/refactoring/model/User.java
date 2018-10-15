@@ -12,13 +12,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import com.h2rd.refactoring.listener.UserListener;
 
-//add @data annotation
-
 @Entity
-@Table(
-        name="Users", 
-        uniqueConstraints= @UniqueConstraint(columnNames={"email"})
-        )
+@Table( name="Users", uniqueConstraints= @UniqueConstraint(columnNames={"email"}))
 @EntityListeners(UserListener.class)
 public class User {
     @Id
@@ -30,11 +25,11 @@ public class User {
 
     @NotEmpty
     ArrayList<Role> roles;
-    
+
     public User(){
-        
+
     }
-    
+
     public User(String name, String email, ArrayList<Role> roles) {
         this.name = name;
         this.email = email;
@@ -63,14 +58,6 @@ public class User {
 
     public void setRoles(ArrayList<Role> roles) {
         this.roles = roles;
-    }
-
-    public boolean hasRoles(){
-        return !this.roles.isEmpty();
-    }
-
-    public void addRole(Role role){
-        this.roles.add(role);
     }
 
 }
