@@ -35,7 +35,7 @@ public class UserServiceImplUnitTest {
     private UserServiceImpl userService;
 
     @MockBean
-    private UserRepository userRepository;
+    private UserRepository userRepository;  //mock the user repository to test the user service in isolation
 
     @Test
     public void givenUsers_whenGetAllUsers_thenReturnAllUsers() {
