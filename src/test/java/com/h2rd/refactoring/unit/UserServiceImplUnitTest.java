@@ -36,20 +36,9 @@ public class UserServiceImplUnitTest {
 
     @MockBean
     private UserRepository userRepository;
-
-//    @Before
-//    public void setUp() {
-//        User user1 = TestUtil.createUser("Mahmoud", "mahmoud@gmail.com", "student");
-//        User user2 = TestUtil.createUser("john", "john@gmail.com", "teacher");
-//        List<User> allUsers = Arrays.asList(user1, user2);
-        
-//        Mockito.when(userRepository.findById(user1.getEmail())).thenReturn(Optional.of(user1));
-//        Mockito.when(userRepository.findById(user2.getEmail())).thenReturn(Optional.of(user2));
-//        Mockito.when(userRepository.findAll()).thenReturn(allUsers);
-//    }
     
     @Test
-    public void whenGetAllUsers_thenReturnAllUsers() {
+    public void givenUsers_whenGetAllUsers_thenReturnAllUsers() {
         //given
         User user1 = TestUtil.createUser("Mahmoud", "mahmoud@gmail.com", "student");
         User user2 = TestUtil.createUser("john", "john@gmail.com", "teacher");
@@ -58,13 +47,13 @@ public class UserServiceImplUnitTest {
         //when
         List<User> foundUsers = userService.getAllUsers();
         //then
-        verifyFindAllUsesIsCalled(1);
+        verifyFindAllUsersIsCalled(1);
         assertThat(foundUsers).hasSize(2).extracting(User::getName).contains(user1.getName(), user2.getName());
         assertThat(foundUsers).hasSize(2).extracting(User::getEmail).contains(user1.getEmail(), user2.getEmail());
     }
     
     @Test
-    public void whenGetUserAndUserExists_thenReturnUser() {
+    public void givenUser_whenGetUser_thenReturnUser() {
         //given
         User user1 = TestUtil.createUser("Mahmoud", "mahmoud@gmail.com", "student");
         Mockito.when(userRepository.existsById(user1.getEmail())).thenReturn(true);
@@ -86,7 +75,7 @@ public class UserServiceImplUnitTest {
         User createdUser = userService.createUser(user1);
         //then
         verifySaveIsCalled(1);
-        assertThat(createdUser).extracting(User::getName).contains(user1.getName());
+        assertThat(createdUser).extracting(User::getName).containsOnly(user1.getName());
     }
     
     @Test
@@ -106,12 +95,12 @@ public class UserServiceImplUnitTest {
     //testing delete method skipped
     
     @Test(expected=ResourceNotFoundException.class)
-    public void whenGetUserAndUserDoesNotExist_thenThrowResourceNotFoundException() {
+    public void givenUserDoesNotExist_whenGetUser_thenThrowResourceNotFoundException() {
         userService.getUser("mahmoud@gmail.com").get();
     }
     
     @Test(expected=ResourceNotFoundException.class)
-    public void whenUpdatedUserAndUserDoesNotExist_thenThrowResourceNotFoundException() {
+    public void givenUserDoesNotExist_whenUpdateUser_thenThrowResourceNotFoundException() {
         //given
         User user1 = TestUtil.createUser("Mahmoud", "mahmoud@gmail.com", "student");
         user1.setName("Mahmoud Barake");
@@ -128,7 +117,7 @@ public class UserServiceImplUnitTest {
         Mockito.reset(userRepository);
     }
     
-    private void verifyFindAllUsesIsCalled(int numberOfTimes) {
+    private void verifyFindAllUsersIsCalled(int numberOfTimes) {
         Mockito.verify(userRepository, VerificationModeFactory.times(numberOfTimes)).findAll();
         Mockito.reset(userRepository);
     }

@@ -20,15 +20,15 @@ import com.h2rd.refactoring.util.TestUtil;
 public class UserRepositoryIntegrationTest {
     @Autowired
     private TestEntityManager entityManager;
- 
+
     @Autowired
     private UserRepository userRepository;
-    
+
     @After
     public void resetDb() {
         userRepository.deleteAll();
     }
-    
+
     @Test
     public void givenAUser_whenFindById_thenReturnTheUser() {
         //given
@@ -42,9 +42,9 @@ public class UserRepositoryIntegrationTest {
         Assert.assertEquals(user1.getEmail(), foundUser.getEmail());
         Assert.assertEquals(user1.getRoles().get(0).getName(), foundUser.getRoles().get(0).getName());
     }
-    
+
     @Test
-    public void givenSetOfUsers_whenFindAll_thenReturnAllUsers() {
+    public void givenUsers_whenFindAll_thenReturnAllUsers() {
         //given
         User user1 = TestUtil.createUser("john","john@gmail.com","Student");
         User user2 = TestUtil.createUser("peter","peter@gmail.com","Teacher");
@@ -58,7 +58,7 @@ public class UserRepositoryIntegrationTest {
         //then
         assertThat(allUsers).hasSize(3).extracting(User::getName).containsOnly(user1.getName(), user2.getName(), user3.getName());
     }
-    
+
     @Test
     public void whenCreateUser_thenUserCreatedSuccessfully() {
         //given
@@ -70,7 +70,7 @@ public class UserRepositoryIntegrationTest {
         assertThat(entityManager.find(User.class, user1.getEmail())!=null);
         assertThat(createdUser).extracting(User::getName).containsOnly(user1.getName());
     }
-    
+
     @Test
     public void givenAUser_whenUpdateUser_thenUserUpdatedSuccessfully() {
         //given
@@ -84,7 +84,7 @@ public class UserRepositoryIntegrationTest {
         //then
         assertThat(updatedUser).extracting(User::getName).containsOnly(user1.getName());
     }
-    
+
     @Test
     public void whenDeleteUser_thenUserDeletedSuccessfully() {
         //given
@@ -97,7 +97,7 @@ public class UserRepositoryIntegrationTest {
         //then
         assertThat(entityManager.find(User.class, user1.getEmail())==null);
     }
-    
+
     @Test(expected=BadRequestException.class)
     public void whenCreateUserAndEmailIsInvalid_thenThrowBadRequestException() {
         //given
@@ -107,7 +107,7 @@ public class UserRepositoryIntegrationTest {
         //then
         //throw BadRequestException
     }
-    
+
     @Test(expected=BadRequestException.class)
     public void whenCreateUserAndNameIsEmpty_thenThrowBadRequestException() {
         //given
@@ -117,7 +117,7 @@ public class UserRepositoryIntegrationTest {
         //then
         //throw BadRequestException
     }
-    
+
     @Test(expected=BadRequestException.class)
     public void whenCreateUserAndRoleIsEmpty_thenThrowBadRequestException() {
         //given
@@ -127,5 +127,5 @@ public class UserRepositoryIntegrationTest {
         //then
         //throw BadRequestException
     }
-    
+
 }
