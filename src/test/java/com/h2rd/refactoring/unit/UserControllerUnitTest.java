@@ -76,26 +76,26 @@ public class UserControllerUnitTest {
     
     @Test
     public void whenValidInput_thencreateUser() throws Exception {
-        User user1 = TestUtil.createUser("mahmoud","mahmoudbarake95@gmail.com","student");
+        User user1 = TestUtil.createUser("mahmoud","mahmoud@gmail.com","student");
         given(userService.createUser(Mockito.anyObject())).willReturn(user1);
         
-        String jsonContent = "{\"name\": \"Mahmoud\",\"email\": \"mahmoudbarake95@gmail.com\",\"roles\": [\"student\"]}";
+        String jsonContent = "{\"name\": \"Mahmoud\",\"email\": \"mahmoud@gmail.com\",\"roles\": [\"student\"]}";
         mvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON).content(jsonContent)).andExpect(status().isCreated());
         verify(userService, VerificationModeFactory.times(1)).createUser(Mockito.anyObject());
     }
     
     @Test
     public void whenValidInput_thenUpdateUser() throws Exception {
-        User user1 = TestUtil.createUser("mahmoud","mahmoudbarake95@gmail.com","student");
+        User user1 = TestUtil.createUser("mahmoud","mahmoud@gmail.com","student");
         given(userService.createUser(Mockito.anyObject())).willReturn(user1);
         userService.createUser(user1);
         
-        User user2 = TestUtil.createUser("mahmoud barake","mahmoudbarake95@gmail.com","student");//simulate the new user after the update
+        User user2 = TestUtil.createUser("mahmoud barake","mahmoud@gmail.com","student");//simulate the new user after the update
         given(userService.updateUser(Mockito.anyObject(),Mockito.anyString())).willReturn(user2);
         
         //update name
-        String jsonContent = "{\"name\": \"mahmoud barake\",\"email\": \"mahmoudbarake95@gmail.com\",\"roles\": [\"student\"]}";
-        mvc.perform(put("/users/mahmoudbarake95@gmail.com").contentType(MediaType.APPLICATION_JSON).content(jsonContent)).andExpect(status().isOk());
+        String jsonContent = "{\"name\": \"mahmoud barake\",\"email\": \"mahmoud@gmail.com\",\"roles\": [\"student\"]}";
+        mvc.perform(put("/users/mahmoud@gmail.com").contentType(MediaType.APPLICATION_JSON).content(jsonContent)).andExpect(status().isOk());
         verify(userService, VerificationModeFactory.times(1)).updateUser(Mockito.anyObject(),Mockito.anyString());
         assertThat(user2.getName().equals("mahmoud barake"));
     }

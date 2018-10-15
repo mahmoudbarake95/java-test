@@ -75,7 +75,7 @@ public class UserControllerIntegrationTest {
 
     @Test
     public void whenValidInput_thenCreateUser() throws IOException, Exception {
-        String jsonContent = "{\"name\": \"Mahmoud\",\"email\": \"mahmoudbarake95@gmail.com\",\"roles\": [\"student\"]}";
+        String jsonContent = "{\"name\": \"Mahmoud\",\"email\": \"mahmoud@gmail.com\",\"roles\": [\"student\"]}";
         mvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON).content(jsonContent));
         List<User> foundUsers = userRepository.findAll();
         assertThat(foundUsers).extracting(User::getName).containsOnly("Mahmoud");

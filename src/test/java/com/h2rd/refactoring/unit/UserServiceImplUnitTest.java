@@ -41,7 +41,7 @@ public class UserServiceImplUnitTest {
 
     @Before
     public void setUp() {
-        User user1 = TestUtil.createUser("Mahmoud", "mahmoudbarake95@gmail.com", "student");
+        User user1 = TestUtil.createUser("Mahmoud", "mahmoud@gmail.com", "student");
         User user2 = TestUtil.createUser("john", "john@gmail.com", "teacher");
         List<User> allUsers = Arrays.asList(user1, user2);
         
@@ -68,7 +68,7 @@ public class UserServiceImplUnitTest {
     
     @Test
     public void whenGetAllUsers_thenReturnAllUsers() {
-        User user1 = TestUtil.createUser("Mahmoud", "mahmoudbarake95@gmail.com", "student");
+        User user1 = TestUtil.createUser("Mahmoud", "mahmoud@gmail.com", "student");
         User user2 = TestUtil.createUser("john", "john@gmail.com", "teacher");
         List<User> allUsers = Arrays.asList(user1, user2);
         
@@ -80,7 +80,7 @@ public class UserServiceImplUnitTest {
     
     @Test
     public void whenGetUserAndUserExists_thenReturnUser() {
-        User user1 = TestUtil.createUser("Mahmoud", "mahmoudbarake95@gmail.com", "student");
+        User user1 = TestUtil.createUser("Mahmoud", "mahmoud@gmail.com", "student");
         Mockito.when(userRepository.existsById(user1.getEmail())).thenReturn(true);
         User foundUser = userService.getUser(user1.getEmail()).get();
         
@@ -91,7 +91,7 @@ public class UserServiceImplUnitTest {
     
     @Test(expected=ResourceNotFoundException.class)
     public void whenGetUserAndUserDoesNotExist_thenThrowResourceNotFoundException() {
-        User foundUser = userService.getUser("mahmoudbarake95@gmail.com").get();
+        User foundUser = userService.getUser("mahmoud@gmail.com").get();
     }
     
     
