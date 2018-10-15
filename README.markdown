@@ -48,6 +48,7 @@ Java Refactoring Test Project
 
 * This REST API is implemented using Java Spring Boot.
 * Spring boot is multi-threaded and therefore handles multiple requests concurrently.  
+* The application uses H2 in-memory database.
 * There is no unit test for UserRepository.java class as the implementation of the JpaRepository<T,ID> interface is provided by java spring (we do not have to test the java library!).  
 * In order to write unit tests, we mock all the dependency classes.
 * Unit and integration tests for all the required classes was done but **NOT EXHAUSTIVELY**.
