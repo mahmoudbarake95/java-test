@@ -1,11 +1,9 @@
 package com.h2rd.refactoring.unit;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -39,40 +37,27 @@ public class UserServiceImplUnitTest {
     @MockBean
     private UserRepository userRepository;
 
-    @Before
-    public void setUp() {
-        User user1 = TestUtil.createUser("Mahmoud", "mahmoud@gmail.com", "student");
-        User user2 = TestUtil.createUser("john", "john@gmail.com", "teacher");
-        List<User> allUsers = Arrays.asList(user1, user2);
+//    @Before
+//    public void setUp() {
+//        User user1 = TestUtil.createUser("Mahmoud", "mahmoud@gmail.com", "student");
+//        User user2 = TestUtil.createUser("john", "john@gmail.com", "teacher");
+//        List<User> allUsers = Arrays.asList(user1, user2);
         
-        Mockito.when(userRepository.findById(user1.getEmail())).thenReturn(Optional.of(user1));
-        Mockito.when(userRepository.findById(user2.getEmail())).thenReturn(Optional.of(user2));
-        
-        Mockito.when(userRepository.findAll()).thenReturn(allUsers);
-        
-        /*Employee john = new Employee("john");
-        john.setId(11L);
-
-        Employee bob = new Employee("bob");
-        Employee alex = new Employee("alex");
-
-        List<Employee> allEmployees = Arrays.asList(john, bob, alex);
-
-        Mockito.when(employeeRepository.findByName(john.getName())).thenReturn(john);
-        Mockito.when(employeeRepository.findByName(alex.getName())).thenReturn(alex);
-        Mockito.when(employeeRepository.findByName("wrong_name")).thenReturn(null);
-        Mockito.when(employeeRepository.findById(john.getId()).orElse(null)).thenReturn(john);
-        Mockito.when(employeeRepository.findAll()).thenReturn(allEmployees);
-        Mockito.when(employeeRepository.findById(-99L).orElse(null)).thenReturn(null);*/
-    }
+//        Mockito.when(userRepository.findById(user1.getEmail())).thenReturn(Optional.of(user1));
+//        Mockito.when(userRepository.findById(user2.getEmail())).thenReturn(Optional.of(user2));
+//        Mockito.when(userRepository.findAll()).thenReturn(allUsers);
+//    }
     
     @Test
     public void whenGetAllUsers_thenReturnAllUsers() {
+        //given
         User user1 = TestUtil.createUser("Mahmoud", "mahmoud@gmail.com", "student");
         User user2 = TestUtil.createUser("john", "john@gmail.com", "teacher");
         List<User> allUsers = Arrays.asList(user1, user2);
-        
+        Mockito.when(userRepository.findAll()).thenReturn(allUsers);
+        //when
         List<User> foundUsers = userService.getAllUsers();
+        //then
         verifyFindAllUsesIsCalled(1);
         assertThat(foundUsers).hasSize(2).extracting(User::getName).contains(user1.getName(), user2.getName());
         assertThat(foundUsers).hasSize(2).extracting(User::getEmail).contains(user1.getEmail(), user2.getEmail());
@@ -80,20 +65,62 @@ public class UserServiceImplUnitTest {
     
     @Test
     public void whenGetUserAndUserExists_thenReturnUser() {
+        //given
         User user1 = TestUtil.createUser("Mahmoud", "mahmoud@gmail.com", "student");
         Mockito.when(userRepository.existsById(user1.getEmail())).thenReturn(true);
+        Mockito.when(userRepository.findById(user1.getEmail())).thenReturn(Optional.of(user1));
+        //when
         User foundUser = userService.getUser(user1.getEmail()).get();
-        
+        //then
         verifyFindByIdIsCalled(1);
         assertThat(foundUser).extracting(User::getName).contains(user1.getName());
-//        assertThat(foundUser).extracting(User::getName).contains(user1.getName());
     }
+    
+    @Test
+    public void whenCreateUser_thenUserCreatedSuccessfully() {
+        //given
+        User user1 = TestUtil.createUser("Mahmoud", "mahmoud@gmail.com", "student");
+        Mockito.when(userRepository.save(user1)).thenReturn(user1);
+        Mockito.when(userRepository.findById(user1.getEmail())).thenReturn(Optional.of(user1));
+        //when
+        User createdUser = userService.createUser(user1);
+        //then
+        verifySaveIsCalled(1);
+        assertThat(createdUser).extracting(User::getName).contains(user1.getName());
+    }
+    
+    @Test
+    public void whenUpdateUser_thenUserUpdatedSuccessfully() {
+        //given
+        User user1 = TestUtil.createUser("Mahmoud", "mahmoud@gmail.com", "student");
+        user1.setName("Mahmoud Barake");
+        Mockito.when(userRepository.save(user1)).thenReturn(user1);//return user with updated name
+        Mockito.when(userRepository.existsById(user1.getEmail())).thenReturn(true);
+        //when
+        User updatedUser = userService.updateUser(user1, user1.getEmail());
+        //then
+        verifySaveIsCalled(1);
+        assertThat(updatedUser).extracting(User::getName).contains(user1.getName());
+    }
+    
+    //testing delete method skipped
     
     @Test(expected=ResourceNotFoundException.class)
     public void whenGetUserAndUserDoesNotExist_thenThrowResourceNotFoundException() {
-        User foundUser = userService.getUser("mahmoud@gmail.com").get();
+        userService.getUser("mahmoud@gmail.com").get();
     }
     
+    @Test(expected=ResourceNotFoundException.class)
+    public void whenUpdatedUserAndUserDoesNotExist_thenThrowResourceNotFoundException() {
+        //given
+        User user1 = TestUtil.createUser("Mahmoud", "mahmoud@gmail.com", "student");
+        user1.setName("Mahmoud Barake");
+        Mockito.when(userRepository.save(user1)).thenReturn(user1);
+        //when
+        userService.updateUser(user1, user1.getEmail());
+        //then
+        //a ResourceNotFoundException is thrown
+    }
     
     
     private void verifyFindByIdIsCalled(int numberOfTimes) {
@@ -103,6 +130,11 @@ public class UserServiceImplUnitTest {
     
     private void verifyFindAllUsesIsCalled(int numberOfTimes) {
         Mockito.verify(userRepository, VerificationModeFactory.times(numberOfTimes)).findAll();
+        Mockito.reset(userRepository);
+    }
+    
+    private void verifySaveIsCalled(int numberOfTimes) {
+        Mockito.verify(userRepository, VerificationModeFactory.times(numberOfTimes)).save(Mockito.any(User.class));
         Mockito.reset(userRepository);
     }
 }

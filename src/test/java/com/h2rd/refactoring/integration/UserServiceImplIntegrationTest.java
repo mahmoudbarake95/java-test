@@ -78,7 +78,7 @@ public class UserServiceImplIntegrationTest {
     
     @Test(expected=ResourceNotFoundException.class)
     public void whenGetUsersAndNoUsersExist_thenNoUsersFound() {
-        User foundUser = userService.getUser("john@gmail.com").get();
+        userService.getUser("john@gmail.com").get();
     }
     
     @Test(expected=BadRequestException.class)
@@ -87,7 +87,7 @@ public class UserServiceImplIntegrationTest {
         userRepository.saveAndFlush(user1);
         
         user1.setEmail("john.smith@gmail.com");
-        User updatedUser = userService.updateUser(user1, "john@gmail.com");
+        userService.updateUser(user1, "john@gmail.com");
     }
     
 }
