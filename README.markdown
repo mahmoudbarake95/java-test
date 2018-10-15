@@ -1,6 +1,59 @@
 Java Refactoring Test Project
 =============================
 
+**How To Run The Application**
+----------------------------
+1. Clone the repo  
+2. Import as maven project into eclipse  
+3. Run Application.java  
+4. Launch Postman  
+5. Perform Requests as follows:  
+    **Get**  
+    Request URL: http://localhost:8080/users    (Get all users)  
+    Request URL: http://localhost:8080/users/{email}    (Get specific user)  
+
+    **POST**  
+    Request URL: http://localhost:8080/users  
+    Headres: Content-Type: application/json  
+    Body:  
+        {  
+            "name": "Mahmoud",  
+            "email": "mahmoudbarake95@gmail.com",  
+            "roles": ["student"]  
+        }  
+
+    **Update**  
+    Request URL: http://localhost:8080/users/{email}  
+    Headres: Content-Type: application/json  
+    Body:  
+        {  
+            "name": "Mahmoud Barake",  
+            "email": "mahmoudbarake95@gmail.com",  
+            "roles": ["student", "TA"]  
+        }  
+
+    **Delete**  
+    Request URL: http://localhost:8080/users/{email}
+    
+**Business Requirements**    
+-------------------------
+* The email of the user is unique and cannot be changed once a user is created.  
+* A valid email must be provided in the request URL and in the request body (in case of POST and PUT) when performing CRUD operations.   
+* The name of the user must not be empty or whitespace.  
+* The user must have at least 1 role, and the names of the roles must not be empty or whitespace. 
+    
+**Notes**
+---------
+ 
+
+* This REST API is implemented using Java Spring Boot.
+* Spring boot is multi-threaded and therefore handles multiple requests concurrently.  
+* There is no unit test for UserRepository.java class as the implementation of the JpaRepository<T,ID> interface is provided by java spring (we do not have to test the java library!).  
+* In order to write unit tests, we mock all the dependency classes.
+* Unit and integration tests for all the required classes was done but **NOT EXHAUSTIVELY**.
+The correct flow was fully tested. However, some but not all potential errors were tested due to time limitations.
+Test cases for other potential errors would follow in a similar manner.
+
 **Please, before starting the test read these instructions carefully.**
 
 Introduction
